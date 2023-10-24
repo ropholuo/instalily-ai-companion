@@ -1,1 +1,0 @@
-!function(){"use strict";var n,e;n=document.body.innerText,e=window.location.href,chrome.runtime.sendMessage({action:"pageContent",url:e,content:n})}();
