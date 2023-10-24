@@ -4,6 +4,7 @@ import "./App.css";
 import api_key from "./apikey";
 
 function App() {
+  const urlRegex = /\bwww\.[a-zA-Z0-9-]+\.com\b/g;
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
@@ -78,6 +79,13 @@ function App() {
     }
   }
 
+  function formatMessageContent(content: string) {
+    return content.replace(urlRegex, (url) => {
+      const absoluteUrl = url.startsWith("http") ? url : `http://${url}`;
+      return `<a href="${absoluteUrl}" target="_blank">${url}</a>`;
+    });
+  }
+
   return (
     <div className="chatbot-sidepanel">
       <div className="chatbot-header">
@@ -97,7 +105,11 @@ function App() {
               message.role === "user" ? "chatbot-message-right" : ""
             }`}
           >
-            <p>{message.content}</p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: formatMessageContent(message.content),
+              }}
+            ></p>
           </div>
         ))}
       </div>
