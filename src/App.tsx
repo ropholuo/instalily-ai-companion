@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./App.css";
+import api_key from "./apikey";
 
 function App() {
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [systemContent, setSystemContent] = useState<
+    { role: string; content: string }[]
+  >([]);
   const historyPages = useRef<string[]>([]);
 
   const handleInputChange = (event: any) => {
@@ -19,9 +23,10 @@ function App() {
         if (historyPages.current.includes(url)) {
           return;
         }
-        setMessages((prevMessages) => [
+        const urlAndContent = `${url} - ${data}`;
+        setSystemContent((prevMessages) => [
           ...prevMessages,
-          { role: "system", content: data },
+          { role: "system", content: urlAndContent },
         ]);
         historyPages.current.push(url);
       }
@@ -38,7 +43,7 @@ function App() {
       setInputValue("");
 
       // Create a new array that includes the new user message
-      const newMessages = [...messages, newUserMessage];
+      const newMessages = [...systemContent, ...messages, newUserMessage];
       console.log(newMessages);
       // Pass the new array to the chatWithGPT function
       chatWithGPT(newMessages).then((botResponse) => {
@@ -85,19 +90,16 @@ function App() {
         <h3>Made with love by Javion</h3>
       </div>
       <div className="chatbot-body">
-        {messages.map(
-          (message, index) =>
-            message.role !== "system" && (
-              <div
-                key={index}
-                className={`chatbot-message ${
-                  message.role === "user" ? "chatbot-message-right" : ""
-                }`}
-              >
-                <p>{message.content}</p>
-              </div>
-            )
-        )}
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`chatbot-message ${
+              message.role === "user" ? "chatbot-message-right" : ""
+            }`}
+          >
+            <p>{message.content}</p>
+          </div>
+        ))}
       </div>
       <div className="chatbot-footer">
         <input

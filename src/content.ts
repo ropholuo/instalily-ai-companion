@@ -1,5 +1,3 @@
-import chrome from "chrome";
-
 function sendPageContent() {
   const pageContent = document.body.innerText;
   const pageURL = window.location.href;

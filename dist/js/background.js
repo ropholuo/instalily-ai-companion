@@ -1,1 +1,1 @@
-!function(){"use strict";chrome.runtime.onMessage.addListener((function(e,n,t){"pageContent"===e.action&&(console.log("Received page content:",e.content),chrome.runtime.sendMessage({name:"web-content",data:e.content}))}))}();
+!function(){"use strict";chrome.runtime.onMessage.addListener((function(e,n,t){"pageContent"===e.action&&(console.log("Received page: ",e.url),chrome.runtime.sendMessage({name:"web-content",data:e.content,url:e.url}))}))}();

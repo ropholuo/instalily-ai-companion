@@ -1,1 +1,1 @@
-!function(){"use strict";var e;e=document.body.innerText,chrome.runtime.sendMessage({action:"pageContent",content:e})}();
+!function(){"use strict";var n,e;n=document.body.innerText,e=window.location.href,chrome.runtime.sendMessage({action:"pageContent",url:e,content:n})}();
