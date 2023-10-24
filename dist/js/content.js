@@ -1,0 +1,1 @@
+!function(){"use strict";var e;e=document.body.innerText,chrome.runtime.sendMessage({action:"pageContent",content:e})}();

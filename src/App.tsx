@@ -1,18 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
 function App() {
-  const api_key = "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";
-
   const [messages, setMessages] = useState([
-    { role: "system", content: "Hello! How can I assist you today?" },
+    { role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const historyPages = useRef<string[]>([]);
 
   const handleInputChange = (event: any) => {
     setInputValue(event.target.value);
   };
+
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener(({ name, data, url }) => {
+      if (name === "web-content") {
+        if (historyPages.current.includes(url)) {
+          return;
+        }
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: "system", content: data },
+        ]);
+        historyPages.current.push(url);
+      }
+    });
+  }, []);
 
   const handleSendClick = () => {
     if (inputValue.trim() !== "") {
@@ -25,6 +39,7 @@ function App() {
 
       // Create a new array that includes the new user message
       const newMessages = [...messages, newUserMessage];
+      console.log(newMessages);
       // Pass the new array to the chatWithGPT function
       chatWithGPT(newMessages).then((botResponse) => {
         setMessages((prevMessages) => [
@@ -42,10 +57,12 @@ function App() {
         {
           messages: newMessages,
           model: "gpt-4",
+          max_tokens: 150,
         },
         {
           headers: {
             Authorization: "Bearer " + api_key,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -68,16 +85,19 @@ function App() {
         <h3>Made with love by Javion</h3>
       </div>
       <div className="chatbot-body">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`chatbot-message ${
-              message.role === "user" ? "chatbot-message-right" : ""
-            }`}
-          >
-            <p>{message.content}</p>
-          </div>
-        ))}
+        {messages.map(
+          (message, index) =>
+            message.role !== "system" && (
+              <div
+                key={index}
+                className={`chatbot-message ${
+                  message.role === "user" ? "chatbot-message-right" : ""
+                }`}
+              >
+                <p>{message.content}</p>
+              </div>
+            )
+        )}
       </div>
       <div className="chatbot-footer">
         <input

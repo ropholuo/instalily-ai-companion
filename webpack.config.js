@@ -1,3 +1,4 @@
+// const webpack = require("webpack");
 const path = require("path");
 const HTMLPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -32,10 +33,21 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: "manifest.json", to: "../manifest.json" }],
     }),
+    // new webpack.ProvidePlugin({
+    //   process: "process/browser",
+    // }),
     ...getHtmlPlugins(["index"]),
   ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
+    fallback: {
+      fs: false,
+      child_process: false,
+      os: false,
+    },
+    // alias: {
+    //   process: "process/browser",
+    // },
   },
   output: {
     path: path.join(__dirname, "dist/js"),
