@@ -1,38 +1,108 @@
-.App {
+.chatbot-header {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
   text-align: center;
+  margin-bottom: 10px; /* Add space between header and body */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#chatbot-logo {
+  max-width: 100%; /* Ensure the logo doesn’t overflow the container */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 10px; /* Add space below the logo */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.chatbot-header h2,
+.chatbot-header h3 {
+  margin: 5px 0; /* Add space above and below the titles */
+  color: #333; /* Set the text color */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.chatbot-header h2 {
+  font-size: 1.5em; /* Set the font size */
+}
+
+.chatbot-header h3 {
+  font-size: 1em; /* Set the font size */
+  color: #666; /* Set a lighter text color */
+}
+
+
+* {
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+.chatbot-sidepanel {
   display: flex;
   flex-direction: column;
+  height: 100vh; /* Set the height to fill the viewport */
+}
+
+.chatbot-body {
+    overflow-y: auto;
+  flex-grow: 1; 
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align messages to the start */
+  overflow-y: scroll;
+  padding: 10px;
+  max-width: 100%; /* Set a max-width */
+}
+
+.chatbot-message {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+  padding: 10px;
+  max-width: 100%; /* Allow messages to take the full width of the chatbot-body */
+}
+
+.chatbot-message-right {
+  align-self: flex-end; /* Align user messages to the end */
+}
+
+
+.chatbot-message p {
+  margin: 0;
+}
+
+.chatbot-message-right {
+  background-color: #dcf8c6;
+}
+
+.chatbot-footer {
+    flex-shrink: 0;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+.chatbot-footer input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.chatbot-footer button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
 }
