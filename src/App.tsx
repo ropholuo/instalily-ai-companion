@@ -4,7 +4,8 @@ import "./App.css";
 import api_key from "./apikey";
 
 function App() {
-  const urlRegex = /\bwww\.[a-zA-Z0-9-]+\.com\b/g;
+  const urlRegex =
+    /(http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)(?<!\))/g;
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
@@ -29,10 +30,22 @@ function App() {
           ...prevMessages,
           { role: "system", content: urlAndContent },
         ]);
+        summarizeWebPage(data).then((summary) => {
+          const summarizedContent = `${url} - ${summary}`;
+          // Update the systemContent with the same url but with the summary
+          setSystemContent((prevMessages) =>
+            prevMessages.map((message) => {
+              if (message.content.startsWith(url)) {
+                return { ...message, content: summarizedContent };
+              }
+              return message;
+            })
+          );
+        });
         historyPages.current.push(url);
       }
     });
-  }, []);
+  });
 
   const handleSendClick = () => {
     if (inputValue.trim() !== "") {
@@ -72,15 +85,21 @@ function App() {
           },
         }
       );
-
+      console.log(response);
       return response.data.choices[0].message.content;
     } catch (error) {
       console.error("Error:", error);
     }
   }
 
+  async function summarizeWebPage(content: string) {
+    const prompt = `Please summarize the most important or critical information from the following webpage in a concise manner, using less than 200 words.: ${content}`;
+    return chatWithGPT([{ role: "user", content: prompt }]);
+  }
+
   function formatMessageContent(content: string) {
     return content.replace(urlRegex, (url) => {
+      console.log(url);
       const absoluteUrl = url.startsWith("http") ? url : `http://${url}`;
       return `<a href="${absoluteUrl}" target="_blank">${url}</a>`;
     });
