@@ -76,7 +76,6 @@ function App() {
         {
           messages: newMessages,
           model: "gpt-4",
-          max_tokens: 150,
         },
         {
           headers: {
