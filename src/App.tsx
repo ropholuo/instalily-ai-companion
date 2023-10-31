@@ -14,6 +14,7 @@ function App() {
     { role: string; content: string }[]
   >([]);
   const historyPages = useRef<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: any) => {
     setInputValue(event.target.value);
@@ -70,20 +71,25 @@ function App() {
   };
 
   async function chatWithGPT(newMessages: { role: string; content: string }[]) {
+    setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          messages: newMessages,
-          model: "gpt-4",
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + api_key,
-            "Content-Type": "application/json",
+      const response = await axios
+        .post(
+          "https://api.openai.com/v1/chat/completions",
+          {
+            messages: newMessages,
+            model: "gpt-4",
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: "Bearer " + api_key,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .finally(() => {
+          setIsLoading(false);
+        });
       console.log(response);
       return response.data.choices[0].message.content;
     } catch (error) {
@@ -130,6 +136,7 @@ function App() {
             ></p>
           </div>
         ))}
+        {isLoading && <div className="loading"></div>}
       </div>
       <div className="chatbot-footer">
         <input
